@@ -1,0 +1,1235 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&family=Rubik:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,900&display=swap');
+
+/* Suisse Intl Local Fonts (1:1 from игра_ловля) */
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/SuisseIntl-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/SuisseIntl-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/SuisseIntl-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('fonts/SuisseIntl-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.hidden {
+    display: none !important;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #7bb5e8;
+}
+
+body {
+    background: #7bb5e8;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Rubik', sans-serif;
+    overflow: hidden;
+    color: #1a2a3a;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#gameContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+    max-width: 480px;
+    background: #7bb5e8;
+    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: 0 0 45px rgba(10, 45, 90, 0.25);
+}
+
+/* Background layers (Single static winter sky for Cover & Rules, Zero Flicker) */
+.figma-bg-sky {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.figma-bg-game {
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    transition: opacity 0.4s ease-out;
+}
+
+.figma-bg-game.active {
+    opacity: 1;
+}
+
+/* Dynamic Falling Snow Canvas */
+#snowCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Main Game Canvas (Match-3 Tiles, Dishes, Selection, Sparks) */
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    touch-action: none;
+}
+
+/* HUD Layer (Z-index 10, 1:1 from игра_чистовая) */
+/* ========================================================
+   GAMEPLAY TOP HUD (Figma 1:1 Layout)
+   ======================================================== */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: calc(max(22px, env(safe-area-inset-top)) + 14px) 16px 4px 16px;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* 1-я строка: Полоса прогресса с Дедом Морозом + Монетка LB + 4-значный счет */
+.hud-score-progress-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.hud-progress-track-wrap {
+    flex: 1;
+    position: relative;
+    padding-left: 14px;
+    padding-right: 6px;
+}
+
+.hud-progress-track {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    background: #D1F0FE;
+    border-radius: 10px;
+    overflow: visible;
+    box-shadow: 0 1px 3px rgba(10, 60, 110, 0.12);
+}
+
+.hud-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #FFFFFF 0%, #BEE3F8 100%);
+    border-radius: 10px;
+    transition: width 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hud-progress-santa {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-50%, -50%);
+    width: clamp(34px, 8.5vw, 40px);
+    height: clamp(34px, 8.5vw, 40px);
+    object-fit: contain;
+    filter: drop-shadow(0 3px 6px rgba(10, 45, 90, 0.28));
+    transition: left 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.hud-coin-score-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.hud-score-coin {
+    width: clamp(30px, 7.5vw, 36px);
+    height: clamp(30px, 7.5vw, 36px);
+    object-fit: contain;
+    filter: drop-shadow(0 2px 5px rgba(220, 80, 0, 0.35));
+    transform: translateY(-1px);
+}
+
+.hud-score-digits {
+    font-family: 'Suisse Intl', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 900;
+    font-size: clamp(17px, 4.8vw, 22px);
+    line-height: 0.99;
+    letter-spacing: 0.02em;
+    color: #FFFFFF;
+    -webkit-text-stroke: 1.1px #DA1F0C;
+    paint-order: stroke fill;
+    text-shadow: 0 1px 2px rgba(218, 31, 12, 0.45);
+    min-width: 48px;
+    text-align: right;
+}
+
+/* 2-я строка: Таймер строго по центру экрана в плашке (симметрично 1:1) */
+.hud-timer-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 2px;
+}
+
+.hud-timer-pill {
+    position: relative;
+    width: clamp(98px, 25vw, 114px);
+    aspect-ratio: 127 / 48;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 10px rgba(10, 50, 100, 0.16));
+}
+
+.hud-timer-pill-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+}
+
+.hud-timer-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-family: 'Suisse Intl', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 3.8vw, 16px);
+    line-height: 1;
+    color: #05449A;
+    transform: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.timer-icon {
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    transform: translateY(-0.5px);
+    opacity: 0.95;
+}
+
+#timerText {
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+.hud-timer-pill.low-time .hud-timer-content {
+    color: #DA1F0C;
+    animation: pulseLowTime 0.75s ease-in-out infinite;
+}
+
+@keyframes pulseLowTime {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.hud-combo-banner {
+    position: absolute;
+    right: 0;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    color: #E63946;
+    font-family: 'Suisse Intl', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(230, 57, 70, 0.22);
+    animation: comboPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes comboPop {
+    0% { transform: scale(0.6); opacity: 0; }
+    80% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Toast Notification (Shuffle / Hint) - нежный матовый бейдж */
+.game-toast {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 10px 22px;
+    color: #05449A;
+    font-family: 'Suisse Intl', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    box-shadow: 0 10px 28px rgba(10, 45, 90, 0.16);
+    z-index: 50;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Universal Top Banner (Never unmounts, zero flicker across screens) */
+.screen-top-banner-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: calc(max(6px, env(safe-area-inset-top)));
+    z-index: 25;
+    flex-shrink: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.screen-top-banner-img {
+    width: 100vw;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 16px rgba(10, 45, 90, 0.20));
+}
+
+.screen-top-spacer {
+    width: 100%;
+    height: clamp(80px, 12vh, 105px);
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+/* ========================================================
+   SCREEN 1: Cover Screen (1:1 from игра_ловля)
+   ======================================================== */
+.cover-elements-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    z-index: 20;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.cover-top-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: calc(max(6px, env(safe-area-inset-top)));
+    z-index: 6;
+    flex-shrink: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.cover-ribbon-banner {
+    width: 100vw;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 16px rgba(10, 45, 90, 0.20));
+}
+
+.cover-santa-wrapper {
+    position: absolute;
+    top: clamp(120px, 17vh, 155px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(390px, 95vw);
+    height: clamp(370px, 49vh, 435px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.santa-glow-circle {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(200, 235, 255, 0.2) 50%, rgba(255, 255, 255, 0) 75%);
+    filter: blur(14px);
+    z-index: -1;
+    pointer-events: none;
+    animation: glowPulse 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    100% { transform: scale(1.08); opacity: 1; }
+}
+
+.cover-santa {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 24px rgba(10, 45, 90, 0.16));
+    animation: santaWalkFloat 3.6s ease-in-out infinite;
+}
+
+@keyframes santaWalkFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    30% { transform: translateY(-6px) rotate(-1deg); }
+    70% { transform: translateY(-3px) rotate(1.2deg); }
+}
+
+.cover-bottom-plate-box {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: clamp(260px, 36vh, 310px);
+    flex-shrink: 0;
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: auto;
+    margin-bottom: 0;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.cover-plate-bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+    pointer-events: none;
+}
+
+.cover-plate-content {
+    position: relative;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: clamp(38px, 5.5vh, 48px);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: calc(max(18px, env(safe-area-inset-bottom)) + 8px);
+    pointer-events: auto;
+}
+
+.cover-text-group {
+    width: min(320px, 88vw);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: clamp(14px, 2.2vh, 22px);
+    flex-shrink: 0;
+}
+
+.cover-heading-svg {
+    width: calc(min(320px, 88vw) * (289 / 312));
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.cover-subheading-svg {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+.cover-play-btn-graphic {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    width: min(296px, 80vw);
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    flex-shrink: 0;
+    transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.cover-play-btn-graphic:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+.cover-play-btn-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 16px rgba(220, 40, 40, 0.35));
+}
+
+.cover-play-btn {
+    width: min(296px, 78%);
+    height: 52px;
+    background: linear-gradient(180deg, #F25858 0%, #E63946 100%);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(230, 57, 70, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    transition: transform 0.12s ease, filter 0.12s ease;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+.cover-play-btn:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+/* ========================================================
+   SCREEN 2: Rules Slider Screen (1:1 from игра_ловля)
+   ======================================================== */
+.rules-screen-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: calc(max(10px, env(safe-area-inset-bottom)) + 2px);
+    z-index: 20;
+    pointer-events: auto;
+    overflow: hidden;
+}
+
+.rules-top-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: calc(max(6px, env(safe-area-inset-top)));
+    z-index: 11;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.rules-ribbon-banner {
+    width: 100vw;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 16px rgba(10, 45, 90, 0.20));
+}
+
+.rules-card-container {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    margin-top: -6px;
+    margin-bottom: 0;
+    z-index: 12;
+}
+
+.rules-card-slot {
+    width: min(330px, 86vw);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.rules-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 30px rgba(10, 45, 90, 0.20));
+    pointer-events: none;
+    user-select: none;
+    display: block;
+}
+
+/* Card inner structure - uniform size for all rules! */
+.rules-card-unit {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 28px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(215, 238, 255, 0.90) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 14px 34px rgba(10, 45, 90, 0.22), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 20px 20px 20px;
+    animation: cardPop 0.25s cubic-bezier(0.34, 1.3, 0.64, 1);
+    box-sizing: border-box;
+}
+
+@keyframes cardPop {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.rules-card-header {
+    text-align: center;
+    width: 100%;
+}
+
+.rules-card-title {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: #0c3664;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+}
+
+.rules-card-desc {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.35;
+    color: #3b5a7a;
+    text-align: center;
+    padding: 0 6px;
+}
+
+.rules-card-desc b {
+    font-weight: 800;
+    color: #0c3664;
+}
+
+.rules-card-visual {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 6px 0;
+}
+
+.rules-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+    margin-bottom: 0;
+    z-index: 12;
+    flex-shrink: 0;
+}
+
+.pagination-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.45);
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.pagination-dot.active {
+    width: 11px;
+    height: 11px;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(10, 45, 90, 0.25);
+    transform: scale(1.15);
+}
+
+.rules-bottom-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 12;
+    flex-shrink: 0;
+}
+
+.rules-buttons-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0px;
+}
+
+.rules-svg-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.rules-btn-skip {
+    margin-top: -38px;
+}
+
+.rules-btn-img {
+    width: min(358px, 94vw);
+    height: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+}
+
+.rules-btn-img-start {
+    width: min(340px, 89vw);
+    height: auto;
+    margin-top: -10px;
+    margin-bottom: 6px;
+}
+
+.rules-svg-btn:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+/* ========================================================
+   SCREEN 3: Countdown Overlay (3..2..1)
+   ======================================================== */
+.screen-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 25;
+    overflow: hidden;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.countdown-card {
+    position: absolute;
+    top: clamp(90px, 15vh, 140px);
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(352px, 90%);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.countdown-number {
+    position: absolute;
+    height: clamp(100px, 18vh, 140px);
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(220, 60, 0, 0.35));
+    opacity: 0;
+    pointer-events: none;
+}
+
+.countdown-number.active {
+    animation: smoothCountdownPop 0.95s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes smoothCountdownPop {
+    0% { transform: scale(0.4) translateY(20px); opacity: 0; }
+    25% { transform: scale(1.15) translateY(-5px); opacity: 1; }
+    45% { transform: scale(1.0) translateY(0); opacity: 1; }
+    75% { transform: scale(1.0) translateY(0); opacity: 1; }
+    100% { transform: scale(0.85) translateY(-15px); opacity: 0; }
+}
+
+/* ========================================================
+   SCREEN 4: Результаты игры (1:1 from игра_ловля)
+   ======================================================== */
+@keyframes fadeInScreen {
+    from { opacity: 0; transform: scale(0.99); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.result-screen-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 25;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: calc(max(8px, env(safe-area-inset-top)) + 2px);
+    padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 6px);
+    animation: fadeInScreen 0.28s ease-out;
+    pointer-events: auto;
+}
+
+/* Верхняя лента "УРОВЕНЬ: ЧЕМПИОН" */
+.result-top-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-shrink: 0;
+    pointer-events: none;
+    z-index: 12;
+}
+
+.result-ribbon-banner {
+    width: 100vw;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 6px 16px rgba(10, 45, 90, 0.20));
+}
+
+/* Центральная плашка */
+.result-card-container {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    z-index: 12;
+    margin-top: -6px;
+    margin-bottom: 4px;
+}
+
+.result-card-box {
+    position: relative;
+    width: min(344px, 88vw);
+    aspect-ratio: 740 / 744;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-plate-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 30px rgba(10, 45, 90, 0.20));
+    pointer-events: none;
+}
+
+.result-card-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 26%;
+}
+
+/* Строка динамического счета "+350" и большая монетка */
+.result-score-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 5%;
+}
+
+.result-score-text {
+    font-family: 'Suisse Intl', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    font-size: clamp(48px, 13.5vw, 60px);
+    line-height: 0.99;
+    letter-spacing: -0.03em;
+    color: #05449A;
+    -webkit-text-stroke: 1.4px #0039B5;
+    paint-order: stroke fill;
+    text-shadow: none;
+}
+
+.result-coin-icon {
+    width: clamp(50px, 14vw, 62px);
+    height: clamp(50px, 14vw, 62px);
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(220, 80, 0, 0.35));
+    transform: translateY(-2px);
+    flex-shrink: 0;
+}
+
+/* Блок статистики: Осталось попыток / Лучший результат */
+.result-stats-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.result-stat-line {
+    font-family: 'Suisse Intl', sans-serif;
+    font-weight: 500;
+    font-size: clamp(14px, 3.8vw, 16px);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: #05449A;
+    text-align: center;
+}
+
+/* Нижний блок кнопок */
+.result-bottom-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    z-index: 12;
+    flex-shrink: 0;
+}
+
+.result-action-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: min(348px, 90vw);
+    transition: transform 0.12s ease, filter 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.result-action-btn:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+.result-action-btn:nth-child(2) {
+    margin-top: -18px;
+}
+
+.result-btn-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+}
+
+/* Confetti Celebration Canvas (Rendered above Results Screen) */
+.screen-confetti-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+    pointer-events: none;
+}
+
+
+/* ========================================================
+   SCREEN 5: EXIT / LOYALTY SCREEN (СПАСИБО ЗА ВИЗИТ! 1:1)
+   ======================================================== */
+.exit-screen-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 25;
+    overflow: hidden;
+    animation: fadeInScreen 0.3s ease-out forwards;
+    pointer-events: auto;
+}
+
+.exit-ribbon-wrapper {
+    position: absolute;
+    top: calc(max(10px, env(safe-area-inset-top)) + 76px);
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.exit-ribbon-banner {
+    width: min(348px, 90vw);
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 20px rgba(10, 45, 90, 0.22));
+    display: block;
+}
+
+.exit-santa-wrapper {
+    position: absolute;
+    top: calc(max(10px, env(safe-area-inset-top)) + 202px);
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.exit-santa-img {
+    width: min(235px, 62vw);
+    height: auto;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 10px 24px rgba(10, 45, 90, 0.16));
+    animation: santaWalkFloat 3.8s ease-in-out infinite;
+}
+
+.exit-card-box {
+    position: absolute;
+    top: 428px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 12;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: visible;
+}
+
+.exit-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 20px rgba(10, 45, 90, 0.15));
+}
+
+.exit-card-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 72px 28px calc(max(14px, env(safe-area-inset-bottom)) + 26px) 28px;
+    box-sizing: border-box;
+}
+
+.exit-text-group {
+    width: 100%;
+    max-width: 330px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    pointer-events: none;
+}
+
+.exit-heading {
+    font-family: 'Suisse Intl', 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: 21.5px;
+    line-height: 1.15;
+    color: #0b4d96;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.2px;
+}
+
+.exit-subheading {
+    font-family: 'Suisse Intl', 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.34;
+    color: #15559c;
+    margin: 0 0 7px 0;
+}
+
+.exit-footnote {
+    font-family: 'Suisse Intl', 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 9.5px;
+    line-height: 1.25;
+    color: #2566aa;
+    margin: 0;
+    opacity: 0.95;
+}
+
+.exit-btn-quit {
+    width: 100%;
+    max-width: 295px;
+    margin: auto auto 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.12s ease, filter 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.exit-btn-quit-img {
+    width: 100%;
+    height: auto;
+    max-height: 50px;
+    display: block;
+    filter: drop-shadow(0 8px 20px rgba(10, 45, 90, 0.22));
+}
+
+.exit-btn-quit:active {
+    transform: scale(0.97);
+    filter: brightness(0.95);
+}
+
+/* Shorter screen adaptations */
+@media (max-height: 740px) {
+    .rules-card-unit { height: 370px; }
+    .rules-card-bg, .rules-card-content { height: 350px; }
+    .rules-card-content { padding: 16px; }
+    .rule-desc { font-size: 12px; }
+    .rules-sticker-dango { top: 310px; width: 80px; }
+    .rules-sticker-bao { top: 320px; width: 90px; }
+    .rules-sticker-icecream { top: 270px; width: 75px; }
+    .cover-play-btn { height: 46px; font-size: 18px; }
+}
