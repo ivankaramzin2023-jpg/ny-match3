@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&family=Rubik:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,900&display=swap');
 
-/* Suisse Intl Local Fonts (1:1 from игра_ловля) */
+/* Suisse Intl Local Fonts */
 @font-face {
     font-family: 'Suisse Intl';
     src: url('fonts/SuisseIntl-Regular.woff2') format('woff2');
@@ -135,9 +135,9 @@ body {
     touch-action: none;
 }
 
-/* HUD Layer (Z-index 10, 1:1 from игра_чистовая) */
+/* HUD Layer (Z-index 10, ) */
 /* ========================================================
-   GAMEPLAY TOP HUD (Figma 1:1 Layout)
+   GAMEPLAY TOP HUD 
    ======================================================== */
 #hud {
     position: absolute;
@@ -229,7 +229,7 @@ body {
     text-align: right;
 }
 
-/* 2-я строка: Таймер строго по центру экрана в плашке (симметрично 1:1) */
+/* 2-я строка: Таймер строго по центру экрана в плашке */
 .hud-timer-row {
     width: 100%;
     display: flex;
@@ -382,7 +382,7 @@ body {
 }
 
 /* ========================================================
-   SCREEN 1: Cover Screen (1:1 from Figma)
+   SCREEN 1: Cover Screen 
    ======================================================== */
 .cover-elements-container {
     position: absolute;
@@ -610,7 +610,7 @@ body {
 }
 
 /* ========================================================
-   SCREEN 2: Rules Slider Screen (1:1 from игра_ловля)
+   SCREEN 2: Rules Slider Screen 
    ======================================================== */
 .rules-screen-container {
     position: absolute;
@@ -884,7 +884,7 @@ body {
 }
 
 /* ========================================================
-   SCREEN 4: Результаты игры (1:1 from игра_ловля)
+   SCREEN 4: Результаты игры 
    ======================================================== */
 @keyframes fadeInScreen {
     from { opacity: 0; transform: scale(0.99); }
@@ -1076,7 +1076,7 @@ body {
 
 
 /* ========================================================
-   SCREEN 5: EXIT / LOYALTY SCREEN (СПАСИБО ЗА ВИЗИТ! 1:1)
+   SCREEN 5: EXIT / LOYALTY SCREEN 
    ======================================================== */
 .exit-screen-container {
     position: absolute;

@@ -121,7 +121,7 @@ class Match3Game {
         this.countdownOverlay = document.getElementById('countdownOverlay');
         this.topBannerBox = document.getElementById('topBannerBox');
 
-        // Results screen DOM (1:1 from игра_ловля)
+        // Results screen DOM 
         this.resultScreen = document.getElementById('resultScreen');
         this.resultScoreValue = document.getElementById('resultScoreValue');
         this.resultAttemptsText = document.getElementById('resultAttemptsText');
@@ -133,7 +133,7 @@ class Match3Game {
         this.exitScreen = document.getElementById('exitScreen');
         this.btnExitGame = document.getElementById('btnExitGame');
 
-        // 3 attempts system (1:1 from игра_ловля)
+        // 3 attempts system 
         this.maxAttempts = 3;
         this.attemptsUsed = 0;
         this.bestScore = 0;
@@ -1117,7 +1117,7 @@ class Match3Game {
             }
         }
 
-        // Festive Confetti (celebration on attempt end 1:1 from игра_ловля)
+        // Festive Confetti (celebration on attempt end )
         if (this.confettiCtx && this.confetti && this.confetti.length > 0) {
             this.updateAndRenderConfetti(this.confettiCtx);
         }
@@ -1401,12 +1401,12 @@ class Match3Game {
             }
         }
 
-        // Show result screen (1:1 from игра_ловля)
+        // Show result screen 
         if (this.resultScreen) {
             this.resultScreen.classList.remove('hidden');
         }
 
-        // Запуск праздничного конфетти (1:1 как в игра_ловля)
+        // Запуск праздничного конфетти 
         this.spawnConfetti();
     }
 
@@ -1475,7 +1475,7 @@ class Match3Game {
     }
 
     /* -------------------------------------------------------------
-       10. Responsive Canvas Resizing & DPR (SKILL Guidelines)
+       10. Responsive Canvas Resizing & DPR 
        ------------------------------------------------------------- */
     handleResize() {
         const container = document.getElementById('gameContainer');
@@ -1609,7 +1609,7 @@ class Match3Game {
             }, { passive: true });
         }
 
-        // Screen 4: Results screen buttons (1:1 from игра_ловля)
+        // Screen 4: Results screen buttons 
         if (this.btnClaimBonus) {
             const handleClaim = (e) => {
                 if (e) {
