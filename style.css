@@ -144,12 +144,12 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: calc(max(22px, env(safe-area-inset-top)) + 14px) 16px 4px 16px;
+    padding: calc(max(14px, env(safe-area-inset-top)) + 6px) 16px 4px 16px;
     z-index: 10;
     pointer-events: none;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
 }
 
 /* 1-я строка: Полоса прогресса с Дедом Морозом + Монетка LB + 4-значный счет */
@@ -236,7 +236,8 @@ body {
     justify-content: center;
     align-items: center;
     position: relative;
-    margin-top: 2px;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .hud-timer-pill {
@@ -375,18 +376,17 @@ body {
 
 .screen-top-spacer {
     width: 100%;
-    height: clamp(80px, 12vh, 105px);
+    height: clamp(140px, 18.5vh, 175px);
     flex-shrink: 0;
     pointer-events: none;
 }
 
 /* ========================================================
-   SCREEN 1: Cover Screen (1:1 from игра_ловля)
+   SCREEN 1: Cover Screen (1:1 from Figma)
    ======================================================== */
 .cover-elements-container {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -422,11 +422,12 @@ body {
 
 .cover-santa-wrapper {
     position: absolute;
-    top: clamp(120px, 17vh, 155px);
+    top: 24%;
     left: 50%;
     transform: translateX(-50%);
-    width: min(390px, 95vw);
-    height: clamp(370px, 49vh, 435px);
+    width: min(290px, 76vw);
+    height: 41%;
+    max-height: 360px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -467,26 +468,25 @@ body {
 }
 
 .cover-bottom-plate-box {
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    max-width: 100%;
-    height: clamp(260px, 36vh, 310px);
-    flex-shrink: 0;
+    height: 39.5%;
+    min-height: 275px;
+    max-height: 345px;
     z-index: 8;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    margin-top: auto;
-    margin-bottom: 0;
     overflow: visible;
     pointer-events: none;
 }
 
 .cover-plate-bg {
     position: absolute;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: fill;
@@ -501,40 +501,52 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: clamp(38px, 5.5vh, 48px);
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: calc(max(18px, env(safe-area-inset-bottom)) + 8px);
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-top: clamp(40px, 6vh, 52px);
+    padding-left: clamp(20px, 5.5vw, 26px);
+    padding-right: clamp(20px, 5.5vw, 26px);
+    padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 12px);
+    box-sizing: border-box;
     pointer-events: auto;
 }
 
 .cover-text-group {
-    width: min(320px, 88vw);
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
-    margin-bottom: clamp(14px, 2.2vh, 22px);
-    flex-shrink: 0;
+    text-align: left;
+    margin-bottom: clamp(6px, 1.2vh, 12px);
 }
 
-.cover-heading-svg {
-    width: calc(min(320px, 88vw) * (289 / 312));
-    height: auto;
-    object-fit: contain;
-    display: block;
-    margin-bottom: 10px;
-    flex-shrink: 0;
+.cover-heading {
+    font-family: 'Suisse Intl', 'Rubik', sans-serif;
+    font-weight: 800;
+    font-size: clamp(19px, 5vw, 23px);
+    line-height: 1.16;
+    color: #05449A;
+    margin: 0 0 clamp(6px, 1vh, 8px) 0;
+    letter-spacing: -0.2px;
 }
 
-.cover-subheading-svg {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    flex-shrink: 0;
+.cover-subheading {
+    font-family: 'Suisse Intl', 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: clamp(11.5px, 3vw, 13px);
+    line-height: 1.34;
+    color: #05449A;
+    margin: 0 0 clamp(6px, 1vh, 8px) 0;
+}
+
+.cover-footnote {
+    font-family: 'Suisse Intl', 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: clamp(9px, 2.3vw, 10.5px);
+    line-height: 1.28;
+    color: #3b7bbd;
+    margin: 0;
+    opacity: 0.95;
 }
 
 .cover-play-btn-graphic {
@@ -544,14 +556,15 @@ body {
     padding: 0;
     cursor: pointer;
     pointer-events: auto;
-    width: min(296px, 80vw);
+    width: 100%;
+    max-width: 320px;
     height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: auto;
-    flex-shrink: 0;
+    margin: 0 auto;
     transition: transform 0.12s ease, filter 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .cover-play-btn-graphic:active {
@@ -562,6 +575,7 @@ body {
 .cover-play-btn-img {
     width: 100%;
     height: auto;
+    max-height: 54px;
     display: block;
     object-fit: contain;
     filter: drop-shadow(0 6px 16px rgba(220, 40, 40, 0.35));
@@ -642,13 +656,13 @@ body {
     align-items: center;
     justify-content: center;
     padding: 0 8px;
-    margin-top: -6px;
+    margin-top: 0;
     margin-bottom: 0;
     z-index: 12;
 }
 
 .rules-card-slot {
-    width: min(330px, 86vw);
+    width: min(324px, 84vw);
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -922,8 +936,8 @@ body {
     justify-content: center;
     padding: 0 16px;
     z-index: 12;
-    margin-top: -6px;
-    margin-bottom: 4px;
+    margin-top: 10px;
+    margin-bottom: 12px;
 }
 
 .result-card-box {
@@ -1073,22 +1087,28 @@ body {
     overflow: hidden;
     animation: fadeInScreen 0.3s ease-out forwards;
     pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .exit-ribbon-wrapper {
     position: absolute;
-    top: calc(max(10px, env(safe-area-inset-top)) + 76px);
+    top: 0;
     left: 0;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: calc(max(6px, env(safe-area-inset-top)));
     z-index: 10;
     pointer-events: none;
 }
 
 .exit-ribbon-banner {
-    width: min(348px, 90vw);
+    width: 100vw;
+    max-width: 100%;
     height: auto;
     object-fit: contain;
     filter: drop-shadow(0 8px 20px rgba(10, 45, 90, 0.22));
@@ -1097,9 +1117,11 @@ body {
 
 .exit-santa-wrapper {
     position: absolute;
-    top: calc(max(10px, env(safe-area-inset-top)) + 202px);
-    left: 0;
-    width: 100%;
+    top: calc(max(6px, env(safe-area-inset-top)) + clamp(95px, 13.5vh, 125px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(290px, 75vw);
+    height: clamp(240px, 33vh, 290px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1108,8 +1130,8 @@ body {
 }
 
 .exit-santa-img {
-    width: min(235px, 62vw);
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     display: block;
     filter: drop-shadow(0 10px 24px rgba(10, 45, 90, 0.16));
@@ -1118,15 +1140,15 @@ body {
 
 .exit-card-box {
     position: absolute;
-    top: 428px;
     bottom: 0;
     left: 0;
     width: 100%;
+    height: clamp(340px, 48vh, 420px);
     z-index: 12;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
     overflow: visible;
 }
 
@@ -1150,7 +1172,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 72px 28px calc(max(14px, env(safe-area-inset-bottom)) + 26px) 28px;
+    padding: clamp(34px, 4.8vh, 46px) 24px calc(max(14px, env(safe-area-inset-bottom)) + 14px) 24px;
     box-sizing: border-box;
 }
 
@@ -1167,35 +1189,35 @@ body {
 .exit-heading {
     font-family: 'Suisse Intl', 'Rubik', sans-serif;
     font-weight: 800;
-    font-size: 21.5px;
+    font-size: clamp(18px, 4.8vw, 22px);
     line-height: 1.15;
     color: #0b4d96;
-    margin: 0 0 10px 0;
+    margin: 0 0 clamp(6px, 1.2vh, 10px) 0;
     letter-spacing: -0.2px;
 }
 
 .exit-subheading {
     font-family: 'Suisse Intl', 'Rubik', sans-serif;
     font-weight: 400;
-    font-size: 12px;
-    line-height: 1.34;
-    color: #15559c;
-    margin: 0 0 7px 0;
+    font-size: clamp(11px, 2.9vw, 13px);
+    line-height: 1.35;
+    color: #105cae;
+    margin: 0 0 clamp(6px, 1.2vh, 10px) 0;
 }
 
 .exit-footnote {
     font-family: 'Suisse Intl', 'Rubik', sans-serif;
     font-weight: 400;
-    font-size: 9.5px;
-    line-height: 1.25;
-    color: #2566aa;
+    font-size: clamp(9.5px, 2.5vw, 11px);
+    line-height: 1.3;
+    color: #3b7bbd;
     margin: 0;
     opacity: 0.95;
 }
 
 .exit-btn-quit {
     width: 100%;
-    max-width: 295px;
+    max-width: 320px;
     margin: auto auto 0 auto;
     display: flex;
     justify-content: center;
@@ -1212,7 +1234,7 @@ body {
 .exit-btn-quit-img {
     width: 100%;
     height: auto;
-    max-height: 50px;
+    max-height: 54px;
     display: block;
     filter: drop-shadow(0 8px 20px rgba(10, 45, 90, 0.22));
 }

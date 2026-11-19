@@ -1489,11 +1489,10 @@ class Match3Game {
         const scale = clientWidth / baseWidth;
         GAME_CONFIG.height = Math.round(clientHeight / scale);
 
-        // Adjust Grid Y position to sit centered in upper sky area above restaurants
-        // Restaurants start around y = 600px on typical 844px height
+        // Adjust Grid Y position to sit centered in upper sky area above restaurants with generous clearance from the timer
         const skyHeight = GAME_CONFIG.height * 0.68;
         const gridTotalH = this.level.rows * this.level.tileheight + (this.level.rows - 1) * this.level.tilegap;
-        this.level.y = Math.round(Math.max(110, (skyHeight - gridTotalH) / 2 + 35));
+        this.level.y = Math.round(Math.max(160, (skyHeight - gridTotalH) / 2 + 45));
 
         const gridTotalW = this.level.columns * this.level.tilewidth + (this.level.columns - 1) * this.level.tilegap;
         this.level.x = Math.round((baseWidth - gridTotalW) / 2);
