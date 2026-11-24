@@ -8,7 +8,23 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#7bb5e8">
     <title>Новогодняя Игра — Три в ряд (LB Bonus)</title>
-    <link rel="stylesheet" href="style.css?v=2.6.0">
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        (function() {
+            function updateAppHeight() {
+                var h = window.innerHeight;
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.viewportHeight) {
+                    h = window.Telegram.WebApp.viewportHeight;
+                }
+                document.documentElement.style.setProperty('--app-height', h + 'px');
+            }
+            updateAppHeight();
+            window.addEventListener('resize', updateAppHeight);
+            window.addEventListener('orientationchange', updateAppHeight);
+        })();
+    </script>
+    <link rel="stylesheet" href="style.css?v=2.7.0">
     <!-- Non-blocking Google Fonts loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -218,6 +234,6 @@
     </div>
 
     <!-- Game Engine -->
-    <script src="game.js?v=2.6.0"></script>
+    <script src="game.js?v=2.7.0"></script>
 </body>
 </html>

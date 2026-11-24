@@ -49,6 +49,7 @@
 html {
     width: 100%;
     height: 100%;
+    height: var(--app-height, 100dvh);
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -59,9 +60,8 @@ body {
     background: #7bb5e8;
     width: 100%;
     height: 100%;
-    min-height: 100%;
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
+    height: var(--app-height, 100dvh);
+    max-height: var(--app-height, 100dvh);
     margin: 0;
     padding: 0;
     display: flex;
@@ -80,9 +80,8 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 100%;
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
+    height: var(--app-height, 100dvh);
+    max-height: var(--app-height, 100dvh);
     max-width: 480px;
     background: #7bb5e8;
     overflow: hidden;
@@ -473,7 +472,7 @@ body {
     left: 0;
     width: 100%;
     height: 39.5%;
-    min-height: 275px;
+    min-height: 245px;
     max-height: 345px;
     z-index: 8;
     display: flex;
@@ -503,10 +502,10 @@ body {
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
-    padding-top: clamp(40px, 6vh, 52px);
+    padding-top: clamp(32px, 5vh, 48px);
     padding-left: clamp(20px, 5.5vw, 26px);
     padding-right: clamp(20px, 5.5vw, 26px);
-    padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 12px);
+    padding-bottom: calc(max(16px, env(safe-area-inset-bottom)) + 12px);
     box-sizing: border-box;
     pointer-events: auto;
 }
@@ -622,7 +621,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: calc(max(10px, env(safe-area-inset-bottom)) + 2px);
+    padding-top: calc(max(6px, env(safe-area-inset-top)));
+    padding-bottom: calc(max(18px, env(safe-area-inset-bottom)) + 12px);
     z-index: 20;
     pointer-events: auto;
     overflow: hidden;
@@ -632,7 +632,7 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-top: calc(max(6px, env(safe-area-inset-top)));
+    padding-top: 0;
     z-index: 11;
     flex-shrink: 0;
     pointer-events: none;
@@ -650,6 +650,7 @@ body {
 
 .rules-card-container {
     flex: 1;
+    min-height: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -662,7 +663,8 @@ body {
 }
 
 .rules-card-slot {
-    width: min(324px, 84vw);
+    width: min(320px, 82vw, 36vh);
+    max-height: 36vh;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -901,8 +903,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding-top: calc(max(8px, env(safe-area-inset-top)) + 2px);
-    padding-bottom: calc(max(26px, env(safe-area-inset-bottom)) + 18px);
+    padding-top: calc(max(6px, env(safe-area-inset-top)));
+    padding-bottom: calc(max(18px, env(safe-area-inset-bottom)) + 12px);
     animation: fadeInScreen 0.28s ease-out;
     pointer-events: auto;
 }
@@ -922,6 +924,7 @@ body {
     width: 100vw;
     max-width: 100%;
     height: auto;
+    max-height: clamp(56px, 8.5vh, 78px);
     object-fit: contain;
     display: block;
     filter: drop-shadow(0 6px 16px rgba(10, 45, 90, 0.20));
@@ -930,6 +933,7 @@ body {
 /* Центральная плашка */
 .result-card-container {
     flex: 1;
+    min-height: 0;
     width: 100%;
     display: flex;
     align-items: center;
@@ -942,7 +946,8 @@ body {
 
 .result-card-box {
     position: relative;
-    width: min(326px, 84vw);
+    width: min(316px, 82vw, 36vh);
+    max-height: 36vh;
     aspect-ratio: 740 / 744;
     display: flex;
     align-items: center;
@@ -1030,6 +1035,7 @@ body {
     gap: 0;
     z-index: 12;
     flex-shrink: 0;
+    margin-top: auto;
 }
 
 .result-action-btn {
@@ -1042,7 +1048,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: min(348px, 90vw);
+    width: min(336px, 88vw);
     transition: transform 0.12s ease, filter 0.12s ease;
     -webkit-tap-highlight-color: transparent;
 }
@@ -1145,7 +1151,7 @@ body {
     left: 0;
     width: 100%;
     height: 39.5%;
-    min-height: 275px;
+    min-height: 245px;
     max-height: 345px;
     z-index: 8;
     display: flex;
@@ -1176,10 +1182,10 @@ body {
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
-    padding-top: clamp(40px, 6vh, 52px);
+    padding-top: clamp(32px, 5vh, 48px);
     padding-left: clamp(20px, 5.5vw, 26px);
     padding-right: clamp(20px, 5.5vw, 26px);
-    padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 12px);
+    padding-bottom: calc(max(16px, env(safe-area-inset-bottom)) + 12px);
     box-sizing: border-box;
     pointer-events: auto;
 }
@@ -1264,4 +1270,45 @@ body {
     .rules-sticker-bao { top: 320px; width: 90px; }
     .rules-sticker-icecream { top: 270px; width: 75px; }
     .cover-play-btn { height: 46px; font-size: 18px; }
+}
+
+@media (max-height: 700px) {
+    .result-score-row {
+        gap: 6px;
+        margin-bottom: 3%;
+    }
+    .result-score-text {
+        font-size: clamp(36px, 10vw, 44px);
+    }
+    .result-coin-icon {
+        width: clamp(38px, 10vw, 46px);
+        height: clamp(38px, 10vw, 46px);
+    }
+    .result-card-content {
+        padding-top: 22%;
+    }
+    .result-action-btn:nth-child(2) {
+        margin-top: -14px;
+    }
+    .cover-santa-wrapper {
+        top: 20%;
+        height: 38%;
+    }
+    .exit-santa-wrapper {
+        top: 20%;
+        height: 36%;
+    }
+}
+
+@media (max-height: 600px) {
+    .result-card-box {
+        width: min(250px, 72vw, 32vh);
+        max-height: 32vh;
+    }
+    .result-action-btn {
+        width: min(290px, 80vw);
+    }
+    .result-action-btn:nth-child(2) {
+        margin-top: -12px;
+    }
 }

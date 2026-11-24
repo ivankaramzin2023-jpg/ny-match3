@@ -145,6 +145,22 @@ class Match3Game {
         this.lastTime = performance.now();
         this.animGlobalTime = 0;
 
+        // Telegram WebApp setup & viewport sync
+        if (window.Telegram && window.Telegram.WebApp) {
+            try {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+                if (window.Telegram.WebApp.disableVerticalSwipes) {
+                    window.Telegram.WebApp.disableVerticalSwipes();
+                }
+                window.Telegram.WebApp.onEvent('viewportChanged', () => {
+                    this.handleResize();
+                });
+            } catch (e) {
+                console.warn('Telegram WebApp init error:', e);
+            }
+        }
+
         // Init
         this.initGridArray();
         this.loadAssets();
@@ -1478,13 +1494,19 @@ class Match3Game {
        10. Responsive Canvas Resizing & DPR 
        ------------------------------------------------------------- */
     handleResize() {
+        let appH = window.innerHeight;
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.viewportHeight) {
+            appH = window.Telegram.WebApp.viewportHeight;
+        }
+        document.documentElement.style.setProperty('--app-height', `${appH}px`);
+
         const container = document.getElementById('gameContainer');
-        const rect = container.getBoundingClientRect();
+        const rect = container ? container.getBoundingClientRect() : { width: window.innerWidth, height: appH };
         const baseWidth = GAME_CONFIG.baseWidth;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-        const clientWidth = rect.width > 0 ? rect.width : window.innerWidth;
-        const clientHeight = rect.height > 0 ? rect.height : window.innerHeight;
+        const clientWidth = (rect && rect.width > 0) ? rect.width : window.innerWidth;
+        const clientHeight = (rect && rect.height > 0) ? rect.height : appH;
 
         const scale = clientWidth / baseWidth;
         GAME_CONFIG.height = Math.round(clientHeight / scale);
