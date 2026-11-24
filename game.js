@@ -46,11 +46,11 @@ class Match3Game {
         this.level = {
             columns: GAME_CONFIG.columns,
             rows: GAME_CONFIG.rows,
-            tilewidth: 58,
-            tileheight: 58,
-            tilegap: 6,
-            x: 38,
-            y: 152,
+            tilewidth: 66,
+            tileheight: 66,
+            tilegap: 5,
+            x: 20,
+            y: 136,
             tiles: [],
             selectedtile: { selected: false, column: -1, row: -1 }
         };
@@ -980,7 +980,7 @@ class Match3Game {
         this.ctx.scale(scale, scale);
 
         // Draw dish centered inside cell
-        const dishSize = Math.round(this.level.tilewidth * 0.88);
+        const dishSize = Math.round(this.level.tilewidth * 0.91);
         this.ctx.drawImage(img, -dishSize / 2, -dishSize / 2, dishSize, dishSize);
 
         this.ctx.restore();
@@ -1514,7 +1514,7 @@ class Match3Game {
         // Adjust Grid Y position to sit centered in upper sky area above restaurants with generous clearance from the timer
         const skyHeight = GAME_CONFIG.height * 0.68;
         const gridTotalH = this.level.rows * this.level.tileheight + (this.level.rows - 1) * this.level.tilegap;
-        this.level.y = Math.round(Math.max(152, (skyHeight - gridTotalH) / 2 + 37));
+        this.level.y = Math.round(Math.max(136, (skyHeight - gridTotalH) / 2 + 18));
 
         const gridTotalW = this.level.columns * this.level.tilewidth + (this.level.columns - 1) * this.level.tilegap;
         this.level.x = Math.round((baseWidth - gridTotalW) / 2);
