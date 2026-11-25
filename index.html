@@ -24,7 +24,7 @@
             window.addEventListener('orientationchange', updateAppHeight);
         })();
     </script>
-    <link rel="stylesheet" href="style.css?v=2.7.4">
+    <link rel="stylesheet" href="style.css?v=3.0.0">
     <!-- Non-blocking Google Fonts loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +34,12 @@
     </noscript>
 
     <!-- Preload Rules & Buttons for zero-flicker transitions -->
+    <link rel="preload" as="image" href="assets/header_cover.png?v=3.0.0">
+    <link rel="preload" as="image" href="assets/header_rules.png?v=3.0.0">
+    <link rel="preload" as="image" href="assets/header_result.png?v=3.0.0">
+    <link rel="preload" as="image" href="assets/header_final.png?v=3.0.0">
+    <link rel="preload" as="image" href="assets/cover_title_v2.png?v=3.0.0">
+    <link rel="preload" as="image" href="assets/cover_subtitle_v2.png?v=3.0.0">
     <link rel="preload" as="image" href="assets/rules_card_1.webp">
     <link rel="preload" as="image" href="assets/rules_card_2.webp">
     <link rel="preload" as="image" href="assets/rules_card_3.webp">
@@ -42,7 +48,6 @@
     <link rel="preload" as="image" href="assets/rules_btn_start.webp">
     <link rel="preload" as="image" href="assets/timer_pill_bg.webp">
     <link rel="preload" as="image" href="assets/coin_lb.webp">
-    <link rel="preload" as="image" href="assets/result_title_banner.webp">
     <link rel="preload" as="image" href="assets/result_plate_card.webp">
     <link rel="preload" as="image" href="assets/result_coin.webp">
     <link rel="preload" as="image" href="assets/result_btn_claim.webp">
@@ -53,11 +58,6 @@
         <!-- Universal Backgrounds (Single static winter sky for Cover & Rules, Zero Flicker) -->
         <img id="bgSky" src="assets/01_cover_bg.webp" class="figma-bg-sky" alt="Фон неба">
         <img id="bgGame" src="assets/bg_game.webp" class="figma-bg-sky figma-bg-game" alt="Фон игры">
-
-        <!-- Universal Top Festive Ribbon Banner (Persistent across Cover & Rules - NEVER unmounts or blinks) -->
-        <div id="topBannerBox" class="screen-top-banner-box">
-            <img src="assets/cover_title_banner.webp" class="screen-top-banner-img" alt="Новогодняя игра">
-        </div>
 
         <!-- Dynamic Falling Snowflakes Canvas (Rendered behind gameplay tiles, above background) -->
         <canvas id="snowCanvas"></canvas>
@@ -96,7 +96,9 @@
 
         <!-- SCREEN 1: Cover Screen -->
         <div id="startScreen" class="cover-elements-container">
-            <div class="screen-top-spacer"></div>
+            <div class="cover-top-box">
+                <img src="assets/header_cover.png?v=3.0.0" class="cover-ribbon-banner" alt="Новогодняя Игра">
+            </div>
             <div class="cover-santa-wrapper">
                 <img src="assets/cover_santa_match3.webp" class="cover-santa" alt="Дед Мороз собирает сет">
             </div>
@@ -104,9 +106,8 @@
                 <img src="assets/cover_plate.webp" class="cover-plate-bg" alt="Снежная плашка">
                 <div class="cover-plate-content">
                     <div class="cover-text-group">
-                        <h1 class="cover-heading">Спасибо за визит!<br>Пора собрать свой куш</h1>
-                        <p class="cover-subheading">Собирайте новогодние сеты и выигрывайте до 1000 бонусов на карту LB Бонус.</p>
-                        <p class="cover-footnote">Списывайте до 20% от стоимости заказа в любом проекте LB Бонус до 31.01: J'PAN, RA'MEN, WU SHU, Senti Menti, Nene</p>
+                        <img src="assets/cover_title_v2.png?v=3.0.0" class="cover-title-img" alt="Выигрывайте до 1000 БОНУСОВ!">
+                        <img src="assets/cover_subtitle_v2.png?v=3.0.0" class="cover-subtitle-img" alt="Собирайте новогодние сеты и получите шанс пополнить карту LB Бонус">
                     </div>
                     <button id="playBtn" class="cover-play-btn-graphic" type="button" aria-label="ИГРАТЬ">
                         <img src="assets/btn_play.webp?v=1.9.6" class="cover-play-btn-img" alt="ИГРАТЬ">
@@ -117,7 +118,9 @@
 
         <!-- SCREEN 2: Rules Slider Screen -->
         <div id="rulesScreen" class="rules-screen-container hidden">
-            <div class="screen-top-spacer"></div>
+            <div class="rules-top-box">
+                <img src="assets/header_rules.png?v=3.0.0" class="rules-ribbon-banner" alt="Новогодний сет">
+            </div>
 
             <!-- 2. Middle Zone: Rules Card Slot + Pagination Dots (strictly 14px apart) -->
             <div class="rules-card-container">
@@ -165,9 +168,9 @@
 
         <!-- SCREEN 4: Результаты игры -->
         <div id="resultScreen" class="result-screen-container hidden">
-            <!-- Верхняя лента "УРОВЕНЬ: ЧЕМПИОН" -->
+            <!-- Верхняя лента "УРОВЕНЬ: ЛЕГЕНДА" -->
             <div class="result-top-box">
-                <img src="assets/result_title_banner.webp" class="result-ribbon-banner" alt="Уровень: Чемпион">
+                <img src="assets/header_result.png?v=3.0.0" class="result-ribbon-banner" alt="Уровень: Легенда">
             </div>
 
             <!-- Центральная плашка с блюдами и динамическими баллами -->
@@ -204,7 +207,7 @@
         <div id="exitScreen" class="exit-screen-container hidden">
             <!-- Верхняя праздничная лента "СПАСИБО ЗА ВИЗИТ!" -->
             <div class="exit-ribbon-wrapper">
-                <img src="assets/exit_title_banner.webp" class="exit-ribbon-banner" alt="Спасибо за визит!">
+                <img src="assets/header_final.png?v=3.0.0" class="exit-ribbon-banner" alt="Спасибо за визит!">
             </div>
 
             <!-- Дед Мороз с подносом новогодних блюд и сиянием сзади -->
@@ -234,6 +237,6 @@
     </div>
 
     <!-- Game Engine -->
-    <script src="game.js?v=2.7.4"></script>
+    <script src="game.js?v=3.0.0"></script>
 </body>
 </html>
